@@ -2,25 +2,34 @@ import os
 
 directory = os.path.dirname(os.path.realpath(__file__))
 ext = 66600
-found = False
+index = 0
 
-for filename in os.listdir(directory):
-    if str(ext) in filename:
-        print(filename)
-        merged = os.path.splitext(filename)[0]
-        found = True
+filesToMerge = [os.path.join(root, os.path.splitext(name)[0])
+             for root, dirs, files in os.walk(directory)
+             for name in files
+             if name.endswith((str(ext)))]
 
-if found == True:
-    print('merging '+merged)
-    with open(merged, 'w') as outfile:
-        for filename in os.listdir(directory):
-            if str(ext) in filename:
-                ext = ext+1
-                with open(filename) as infile:
-                    for line in infile:
-                        outfile.write(line)
-    print(merged+' merged successfully!')
+results = len(filesToMerge)
+if results > 0:
+    print("The Following " + str(results) + " Files Have Been Split:")
+    for each in filesToMerge:
+        print(each)
+    merge = input("\nWould You Like To Merge These Files? Y/N").upper()
+    
+    if merge == 'Y':
+        while index < results:
+            with open(filesToMerge[index], 'w') as outfile:
+                for subdir, dirs, files in os.walk(directory):
+                    for file in files:
+                        fullDir = subdir + os.sep + file
+                        shortDir = (os.path.splitext(fullDir)[0])
+                        if shortDir == (filesToMerge[index]):
+                            print("Merging " + fullDir + " Into " + filesToMerge[index])
+                            with open(fullDir) as infile:
+                                for line in infile:
+                                    outfile.write(line)
+            index = index+1
+        input("Merging Complete! Press ENTER To Close This Window")
 else:
-    print('No Split PS3 Files Found.')
-
-input('Press ENTER To Close This Window.')
+    print("No Split PS3 Game Files Found")
+    input("Press Enter to Close this Window")
