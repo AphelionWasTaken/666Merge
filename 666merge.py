@@ -6,12 +6,11 @@ found = False
 
 for filename in os.listdir(directory):
     if str(ext) in filename:
-        print(filename)
         merged = os.path.splitext(filename)[0]
         found = True
 
 if found == True:
-    print('merging '+merged)
+    print('Merging '+merged)
     with open(merged, 'w') as outfile:
         for filename in os.listdir(directory):
             if str(ext) in filename:
