@@ -3,6 +3,7 @@ import os
 directory = os.path.dirname(os.path.realpath(__file__))
 ext = 66600
 index = 0
+chunk_size = 4 * 1024 * 1024
 
 filesToMerge = [os.path.join(root, os.path.splitext(name)[0])
              for root, dirs, files in os.walk(directory)
@@ -25,9 +26,9 @@ if results > 0:
                         shortDir = (os.path.splitext(fullDir)[0])
                         if shortDir == (filesToMerge[index]):
                             print("Merging " + fullDir + " Into " + filesToMerge[index])
-                            with open(fullDir) as infile:
-                                for line in infile:
-                                    outfile.write(line)
+                            with open(fullDir, 'rb') as infile:
+                                for chunk in iter(lambda: infile.read(chunk_size), b''):
+                                    outfile.buffer.write(chunk)
             index = index+1
         input("Merging Complete!\nPress ENTER To Close This Window.")
 else:
