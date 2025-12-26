@@ -19,7 +19,7 @@ if results > 0:
     
     if merge == 'Y':
         while index < results:
-            with open(filesToMerge[index], 'w') as outfile:
+            with open(filesToMerge[index], 'wb') as outfile:
                 for subdir, dirs, files in os.walk(directory):
                     for file in files:
                         fullDir = subdir + os.sep + file
